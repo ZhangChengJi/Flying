@@ -56,7 +56,7 @@ public class GrpcFactory implements Grpc {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
-                .sslSocketFactory(getSSLSocketFactory(), new CustomTrustManager())
+                //.sslSocketFactory(getSSLSocketFactory(), new CustomTrustManager())
                 .hostnameVerifier(getHostnameVerifier())
                 .build();
 
