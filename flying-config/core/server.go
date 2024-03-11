@@ -1,11 +1,8 @@
 package core
 
 import (
-	"crypto/tls"
 	"flying-config/api"
-	"flying-config/gateway"
 	"flying-config/global"
-	"flying-config/middleware"
 	grpc_recovery "flying-config/middleware"
 	pb "flying-config/proto/app"
 	pb0 "flying-config/proto/client"
@@ -16,7 +13,6 @@ import (
 	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"log"
 	"net"
 	"time"
 )
@@ -32,7 +28,8 @@ func RunServer() {
 	}
 	address := global.GVA_CONFIG.System.Address
 
-	grpcServer := grpc.NewServer(middleware.TLSInterceptor(),
+	grpcServer := grpc.NewServer(
+		//middleware.TLSInterceptor(),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 			grpc_validator.UnaryServerInterceptor(),
 
@@ -50,12 +47,12 @@ func RunServer() {
 	启动完成✈️
 	地址:%s
 `, address)
-	//if err = grpcServer.Serve(listen); err != nil {
-	//	global.LOG.Error("ListenAndServe: ", zap.Any("err", err))
-	//}
-	httpServer := gateway.ProvideHTTP(address, grpcServer)
-	if err = httpServer.Serve(tls.NewListener(listen, httpServer.TLSConfig)); err != nil {
-		log.Fatal("ListenAndServe: ", err)
+	if err = grpcServer.Serve(listen); err != nil {
+		global.LOG.Error("ListenAndServe: ", zap.Any("err", err))
 	}
+	//httpServer := gateway.ProvideHTTP(address, grpcServer)
+	//if err = httpServer.Serve(tls.NewListener(listen, httpServer.TLSConfig)); err != nil {
+	//	log.Fatal("ListenAndServe: ", err)
+	//}
 
 }
