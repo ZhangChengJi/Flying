@@ -9,7 +9,6 @@ import (
 	namespace "flying-admin/proto/namespace"
 	release "flying-admin/proto/release"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"time"
@@ -106,11 +105,11 @@ func UpdateStatus(key string, b bool) {
 }
 
 func NewConn(url string) (*grpc.ClientConn, error) {
-	creds, err := credentials.NewClientTLSFromFile(global.GVA_CONFIG.System.PrivateKey, global.GVA_CONFIG.System.ServerName)
-	if err != nil {
-		grpclog.Fatalf("Failed to create TLS credentials %v", err)
-	}
-	conn, err := grpc.Dial(url, grpc.WithTransportCredentials(creds))
+	//creds, err := credentials.NewClientTLSFromFile(global.GVA_CONFIG.System.PrivateKey, global.GVA_CONFIG.System.ServerName)
+	//if err != nil {
+	//	grpclog.Fatalf("Failed to create TLS credentials %v", err)
+	//}
+	conn, err := grpc.Dial(url, grpc.WithInsecure())
 	if err != nil {
 		grpclog.Fatalln(err)
 	}
